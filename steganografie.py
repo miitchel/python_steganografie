@@ -1,21 +1,34 @@
+### afbeelding inladen
+### van de afbeelding de eerste pixel aanpassen (RGB)
+### binaire waarde van eerste pixel
+# lSB van een waarde in een pixel aanpassen
+# LSB van alle waardes van alle pixels aanpassen
+# tekst opvragen en converten naar ascii waardes
+# ascii waardes omzetten in binaire getallen
+
 import cv2
-import string
-import os
+from PIL import Image
+import matplotlib.pyplot as plt 
 
-dict1 = {}
-dict2 = {}
+print("Wat is de naam van de afbeelding waar je een geheime tekst in wilt stoppen? (met file extention)")
+filename = input()
 
-for i in range(256):
-    dict1[chr(i)]=i
-    dict2[i]=chr(i)
+img = cv2.imread(filename)
+height, width = img.shape[:2]
 
-print(dict1)
-print(dict2)
 
-img = cv2.imread("test_img.jpg")
+print(f"{r, g, b}")
 
-height = img.shape[0]
-width = img.shape[1]
-channels = img.shape[2]
+# for h in range(height):
+#     for w in range(width):
+        
 
-print(f"Height: {height}, Width: {width}, Number of channels: {channels}")
+(b, g, r) = img[0][0]
+r = bin(r).replace("0b", "")
+b = bin(b).replace("0b", "")
+g = bin(g).replace("0b", "")
+print(f"r={(r, g, b)}")
+
+
+newimg = cv2.imwrite("test.jpg", img)
+
