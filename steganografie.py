@@ -17,17 +17,34 @@ img = cv2.imread(filename)
 height, width = img.shape[:2]
 
 
-print(f"{r, g, b}")
 
-# for h in range(height):
-#     for w in range(width):
+for h in range(10):
+    for w in range(10):
+        (b, g, r) = img[h][w]
+        print(f"OLD {h, w}")
+        print(r, g, b)
+        r = r & ~1 | 1
+        g = g & ~1 | 1
+        b = b & ~1 | 1
+        img[h][w] = (b, g, r)
+        print("NEW")
+        print(r, g, b)
+        print("\n")
+
         
+# n = 23
+# print(bin(n))
+# n = (n & ~1) | 1
+# print(n)
+# print(bin(n))
 
-(b, g, r) = img[0][0]
-r = bin(r).replace("0b", "")
-b = bin(b).replace("0b", "")
-g = bin(g).replace("0b", "")
-print(f"r={(r, g, b)}")
+
+# print(r, g, b)
+
+# r = (r & ~1) | 1
+# g = (g & ~1) | 1
+# b = (b & ~1) | 1
+# print(r, g, b)
 
 
 newimg = cv2.imwrite("test.jpg", img)
