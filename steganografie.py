@@ -23,7 +23,6 @@ for char in secret_text:
 # img = cv2.imread(filename)
 # height, width = img.shape[:2]
 
-
 # for h in range(10):
 #     for w in range(10):
 #         (b, g, r) = img[h][w]
