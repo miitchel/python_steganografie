@@ -16,8 +16,9 @@ print("Wat is de geheime tekst die je wilt verbergen in de afbeelding?")
 secret_text = input()
 
 for char in secret_text:
-    char_bin = bin(ord(char))
-    print(char_bin, char)
+    char_bin = bin(ord(char)).replace("0b", "")
+    for bit in char_bin:
+        print(bit)
 
 # img = cv2.imread(filename)
 # height, width = img.shape[:2]
