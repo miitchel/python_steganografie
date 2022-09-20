@@ -33,6 +33,13 @@ pixels_needed = math.ceil(len(all_bits) / 3)
 
 img = cv2.imread("f.png")
 h, w = img.shape[:2]
+
+current_pixel = 0
+current_color = 0
+
+for bit in all_bits:
+    print(bit)
+
 for pixel in range(pixels_needed):
     (b, g, r) = img[0][pixel]
     
