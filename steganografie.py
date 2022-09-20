@@ -5,23 +5,41 @@
 ### LSB van alle waardes van alle pixels aanpassen
 ### tekst opvragen en converten naar ascii waardes
 ### ascii waardes omzetten in binaire getallen
+# eerste letter in eerste pixel zetten
+
+# check max bits
+
+# all bits
+# w, h
+# rbg/bgr
 
 import cv2
 from PIL import Image
 import matplotlib.pyplot as plt 
+import numpy as np
+import math
 
 # print("Wat is de naam van de afbeelding waar je een geheime tekst in wilt stoppen? (met file extention)")
 # filename = input()
-print("Wat is de geheime tekst die je wilt verbergen in de afbeelding?")
-secret_text = input()
+# print("Wat is de geheime tekst die je wilt verbergen in de afbeelding?")
+secret_text = "az"
 
+all_bits = np.array([])
 for char in secret_text:
-    char_bin = bin(ord(char)).replace("0b", "")
+    char_bin = bin(ord(char)).replace("0b", "0")
     for bit in char_bin:
-        print(bit)
+        all_bits = np.append(all_bits, bit[0])
+pixels_needed = math.ceil(len(all_bits) / 3)
 
-# img = cv2.imread(filename)
-# height, width = img.shape[:2]
+img = cv2.imread("f.png")
+h, w = img.shape[:2]
+for pixel in range(pixels_needed):
+    (b, g, r) = img[0][pixel]
+    
+
+# for bit in all_bits:
+#     for w in range(math.ceil(all_bits / 3)):
+
 
 # for h in range(10):
 #     for w in range(10):
