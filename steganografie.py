@@ -28,25 +28,54 @@ all_bits = np.array([])
 for char in secret_text:
     char_bin = bin(ord(char)).replace("0b", "0")
     for bit in char_bin:
-        all_bits = np.append(all_bits, bit[0])
+        all_bits = np.append(all_bits, 0)
 pixels_needed = math.ceil(len(all_bits) / 3)
 
 img = cv2.imread("f.png")
 h, w = img.shape[:2]
 
-current_pixel = 0
+
+current_pixel_w = 0
+current_pixel_h = 0
+current_color = 0
+pixel_count = 0
 current_color = 0
 
+
+print(all_bits)
+print(img[0])
 for bit in all_bits:
-    print(bit)
-
-for pixel in range(pixels_needed):
-    (b, g, r) = img[0][pixel]
+    (b, g, r) = img[current_pixel_h][current_pixel_w]
+    print(current_pixel_h, current_pixel_w, current_color, bit)
+    print(f"OLD: {b, g, r}")
+    if (current_color == 0):
+        if (bit == "1"):
+            b = b | 1
+        else:
+            b = b & ~1
+        current_color = 1
+    elif (current_color == 1):
+        if (bit == "1"):
+            g = g | 1
+        else:
+            g = g & ~1
+        current_color = 2
+    elif (current_color == 2):
+        if (bit == "1"):
+            r = r | 1
+        else:
+            r = r & ~1
+        
+        img[current_pixel_h][current_pixel_w] = (b, g, r)
+        if (current_pixel_w != w):
+            current_pixel_w = current_pixel_w + 1
+        else:
+            current_pixel_w = 0
+            current_pixel_h = current_pixel_h + 1
+        current_color = 0
+        
     
-
-# for bit in all_bits:
-#     for w in range(math.ceil(all_bits / 3)):
-
+    print(f"NEW: {b, g, r}\n")
 
 # for h in range(10):
 #     for w in range(10):
@@ -61,21 +90,5 @@ for pixel in range(pixels_needed):
 #         # print("NEW")
 #         # print(r, g, b)
 #         # print("\n")
-
-        
-# n = 23
-# print(bin(n))
-# n = (n & ~1) | 1
-# print(n)
-# print(bin(n))
-
-
-# print(r, g, b)
-
-# r = (r & ~1) | 1
-# g = (g & ~1) | 1
-# b = (b & ~1) | 1
-# print(r, g, b)
-
-
-# newimg = cv2.imwrite("test.png", img)
+print(img[0])
+newimg = cv2.imwrite("testf.png", img)
