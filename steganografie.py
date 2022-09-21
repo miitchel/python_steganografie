@@ -19,6 +19,8 @@ import matplotlib.pyplot as plt
 import numpy as np
 import math
 
+#
+
 # print("Wat is de naam van de afbeelding waar je een geheime tekst in wilt stoppen? (met file extention)")
 # filename = input()
 # print("Wat is de geheime tekst die je wilt verbergen in de afbeelding?")
