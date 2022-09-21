@@ -4,7 +4,6 @@ import numpy as np
 import math
 import binascii
 from PIL import Image
-from itertools import islice
 
 def main():
     while True:
