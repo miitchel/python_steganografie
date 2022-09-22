@@ -122,11 +122,9 @@ def decode():
 
     all_bits = ""
     for chunk in chunks:
-        
         for bit in chunk:
             all_bits = all_bits + str(bit).replace(".0", "")
 
-    
     n = int(all_bits, len(chunks))
     decoded_text = n.to_bytes((n.bit_length() + 7) // 8, 'big').decode()
     print(decoded_text)
