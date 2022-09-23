@@ -96,63 +96,44 @@ def decode():
     img = cv2.imread(filename)
     h, w = img.shape[:2]
 
-    collected_chunks = np.array([])
     collected_bits = np.array([])
+    collected_chunks = np.empty([0, 8])
+    index=0
     for current_pixel_h in range(h):
         for current_pixel_w in range(w):
             (b, g, r) = img[current_pixel_h][current_pixel_w]
-            b_lsb = b & 1
-            collected_bits = np.append(collected_bits, b_lsb)
-            if(np.array_equal(collected_bits[-8:], np.array([1, 1, 1, 1, 1, 1, 1, 1]))):
-                print("STOPSTOPSTOPSTOPSTOPSTOPSTOPSTOPSTOPSTOPSTOPSTOPSTOPSTOPSTOPSTOP")
-                break
-            elif(len(collected_bits) == 8 and not np.array_equal(collected_bits[-8:], np.array([1, 1, 1, 1, 1, 1, 1, 1]))):
-                print("PLACED CHUNKPLACED CHUNKPLACED CHUNKPLACED CHUNKPLACED CHUNKPLACED CHUNK")
-                print(collected_bits)
-                collected_chunks = np.concatenate((collected_chunks, collected_bits), axis=0)
-                print(collected_chunks)
-                collected_bits = np.array([])
-            elif(len(collected_bits <= 7)):
-                print("CONTINUECONTINUECONTINUECONTINUECONTINUECONTINUECONTINUECONTINUECONTINUE")
+            colors = [b, g, r]
+            for color in colors:
+                lsb = color & 1
+                collected_bits = np.append(collected_bits, lsb)
+                if(np.array_equal(collected_bits[-8:], np.array([1, 1, 1, 1, 1, 1, 1, 1]))):
+                    break
+                elif(len(collected_bits) == 8 and not np.array_equal(collected_bits[-8:], np.array([1, 1, 1, 1, 1, 1, 1, 1]))):
+                    collected_chunks = np.append(collected_chunks, [collected_bits], axis=0)
+                    index = index+1
+                    collected_bits = np.array([])
+                elif(len(collected_bits <= 7)):
+                    continue
+            else:
                 continue
-
-            g_lsb = g & 1
-            collected_bits = np.append(collected_bits, g_lsb)
-            if(np.array_equal(collected_bits[-8:], np.array([1, 1, 1, 1, 1, 1, 1, 1]))):
-                print("STOPSTOPSTOPSTOPSTOPSTOPSTOPSTOPSTOPSTOPSTOPSTOPSTOPSTOPSTOPSTOP")
-                break
-            elif(len(collected_bits) == 8 and not np.array_equal(collected_bits[-8:], np.array([1, 1, 1, 1, 1, 1, 1, 1]))):
-                print("PLACED CHUNKPLACED CHUNKPLACED CHUNKPLACED CHUNKPLACED CHUNKPLACED CHUNK")
-                collected_chunks = np.concatenate((collected_chunks, collected_bits), axis=0)
-                print(collected_chunks)
-                collected_bits = np.array([])
-            elif(len(collected_bits <= 7)):
-                print("CONTINUECONTINUECONTINUECONTINUECONTINUECONTINUECONTINUECONTINUECONTINUE")
-                continue
-
-            r_lsb = r & 1
-            collected_bits = np.append(collected_bits, r_lsb)
-            if(np.array_equal(collected_bits[-8:], np.array([1, 1, 1, 1, 1, 1, 1, 1]))):
-                print("STOPSTOPSTOPSTOPSTOPSTOPSTOPSTOPSTOPSTOPSTOPSTOPSTOPSTOPSTOPSTOP")
-                break
-            elif(len(collected_bits) == 8 and not np.array_equal(collected_bits[-8:], np.array([1, 1, 1, 1, 1, 1, 1, 1]))):
-                print("PLACED CHUNKPLACED CHUNKPLACED CHUNKPLACED CHUNKPLACED CHUNKPLACED CHUNK")
-                collected_chunks = np.concatenate((collected_chunks, collected_bits), axis=0)
-                print(collected_chunks)
-                collected_bits = np.array([])
-            elif(len(collected_bits <= 7)):
-                print("CONTINUECONTINUECONTINUECONTINUECONTINUECONTINUECONTINUECONTINUECONTINUE")
-                continue
-                
-    print(collected_chunks)
-    all_bits = collected_bits[0 : -7]
-    collected_chunks = np.split(all_bits, np.arange(8, len(all_bits), 8))
-    print(all_bits)
+            break
+        else:
+            continue
+        break
+    
+    all_bits = ""
+    # print(all_bits)
     for chunk in collected_chunks:
         for bit in chunk:
             all_bits = all_bits + str(bit).replace(".0", "")
-
-    n = int(all_bits, len(collected_chunks))
-    decoded_text = n.to_bytes((n.bit_length() + 7) // 8, 'big').decode()
+    # characters = ''.join(chr(int(all_bits[i*8:i*8+8])) for i in range(len(all_bits)//8))
+    # print(characters)
+    # n = int(all_bits, len(collected_chunks))
+    print(collected_chunks)
+    all_bits=int(all_bits, 2)
+    
+    total_bytes = (all_bits.bit_length() +7) // 8
+    bits_to_bytes = all_bits.to_bytes(total_bytes, "big")
+    decoded_text = bits_to_bytes.decode('ascii')
     print(decoded_text)
 main()
