@@ -30,7 +30,7 @@ def encode():
 
         all_bits = np.array([])
         for char in secret_text:
-            char_bin = bin(ord(char)).replace("0b", "0")
+            char_bin = format(ord(char), '08b')
             for bit in char_bin:
                 all_bits = np.append(all_bits, bit[0])
 
@@ -46,12 +46,8 @@ def encode():
         current_color = 0
 
         if (pixels_needed < h * w):
-            print(all_bits)
-            print(img[0])
             for bit in all_bits:
                 (b, g, r) = img[current_pixel_h][current_pixel_w]
-                print(current_pixel_h, current_pixel_w, current_color, bit)
-                print(f"OLD: {b, g, r}")
                 if (current_color == 0):
                     if (bit == "1"):
                         b = b | 1
@@ -79,14 +75,12 @@ def encode():
                         current_pixel_h = current_pixel_h + 1
                     current_color = 0
                 
-                print(f"NEW: {b, g, r}\n")
             break
         else:
             print(f"\nDe geheime tekst is te groot voor deze afbeelding, kies een afbeeding van minstens {pixels_needed} pixels, of neem een kleinere tekst.")
             continue
 
-    print(img)
-    newimg = cv2.imwrite("encoded_" + filename, img)
+    cv2.imwrite("encoded_" + filename, img)
     print(f"Gelukt! De encoded afbeelding zit in dezelfde map als encoded_{filename}")
 
 def decode():
@@ -98,7 +92,6 @@ def decode():
 
     collected_bits = np.array([])
     collected_chunks = np.empty([0, 8])
-    index=0
     for current_pixel_h in range(h):
         for current_pixel_w in range(w):
             (b, g, r) = img[current_pixel_h][current_pixel_w]
@@ -110,7 +103,6 @@ def decode():
                     break
                 elif(len(collected_bits) == 8 and not np.array_equal(collected_bits[-8:], np.array([1, 1, 1, 1, 1, 1, 1, 1]))):
                     collected_chunks = np.append(collected_chunks, [collected_bits], axis=0)
-                    index = index+1
                     collected_bits = np.array([])
                 elif(len(collected_bits <= 7)):
                     continue
@@ -122,14 +114,9 @@ def decode():
         break
     
     all_bits = ""
-    # print(all_bits)
     for chunk in collected_chunks:
         for bit in chunk:
             all_bits = all_bits + str(bit).replace(".0", "")
-    # characters = ''.join(chr(int(all_bits[i*8:i*8+8])) for i in range(len(all_bits)//8))
-    # print(characters)
-    # n = int(all_bits, len(collected_chunks))
-    print(collected_chunks)
     all_bits=int(all_bits, 2)
     
     total_bytes = (all_bits.bit_length() +7) // 8
