@@ -6,7 +6,7 @@ import math
 def main():
     # gebruiker optie geven om te encoderen of decoderen
     while True:
-        print("\n1. Encode (tekst als bits in afbeelding verstoppen)\n2. Decode (bits extracten en de encodeerde tekst ophalen)")
+        print("\nKies een optie:\n1. Encode (tekst als bits in afbeelding verstoppen)\n2. Decode (bits extracten en de encodeerde tekst ophalen)")
         choice = input("Kies 1 of 2: ")
         if (choice == "1" or choice == "2"):
             break
@@ -167,5 +167,5 @@ def decode():
     total_bytes = (all_bits.bit_length() +7) // 8
     bits_to_bytes = all_bits.to_bytes(total_bytes, "big")
     decoded_text = bits_to_bytes.decode('ascii')
-    print(f" De geheime tekst is: {decoded_text}")
+    print(f"De geheime tekst is: {decoded_text}")
 main()
